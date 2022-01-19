@@ -2,18 +2,18 @@ import React from "react";
 import { useState } from "react";
 import blogService from "../services/blogs";
 
-const NewBlog = ({ user, setBlogs, setNotification }) => {
+const NewBlog = ({ user, saveBlog, setNotification }) => {
   const initialState = { title: "", author: "", url: "" };
   const [newBlog, setNewBlog] = useState(initialState);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const blogSaved = await blogService.createPost(newBlog, user.token);
-      setBlogs((prevBlog) => [...prevBlog, blogSaved]);
-      setNewBlog(initialState);
+      const blogSaved = await blogService.createBlog(newBlog, user.token);
+      saveBlog(blogSaved);
       notification(blogSaved);
     } catch (error) {
+      console.log(error.message);
       notification();
     }
   };
@@ -26,11 +26,11 @@ const NewBlog = ({ user, setBlogs, setNotification }) => {
     } else {
       setNotification("All fields are required and minimum 3 caracters");
     }
-
     setTimeout(() => {
       setNotification("");
     }, 3000);
   };
+
   return (
     <>
       <h1>create new</h1>
