@@ -2,6 +2,7 @@ import React from "react";
 import { useEffect } from "react";
 import { useState } from "react";
 import blogService from "../services/blogs";
+import PropTypes from "prop-types";
 
 const Blog = ({ blog, updateBlog, removeBlog }) => {
   const userLs = JSON.parse(localStorage.getItem("loginData"));
@@ -89,4 +90,7 @@ const Blog = ({ blog, updateBlog, removeBlog }) => {
   );
 };
 
+Blog.propTypes = {
+  blog: PropTypes.object.isRequired,
+};
 export default Blog;
