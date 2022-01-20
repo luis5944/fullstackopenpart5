@@ -21,10 +21,12 @@ const Blog = ({ blog, updateBlog, removeBlog }) => {
   const [owner, setOwner] = useState(true);
 
   useEffect(() => {
-    if (userLs.username !== blog.user.username) {
-      setOwner(false);
+    if (userLs) {
+      if (userLs.username !== blog.user.username) {
+        setOwner(false);
+      }
     }
-  }, [userLs.username, blog.user.username]);
+  }, [userLs, blog.user.username]);
 
   const simple = () => (
     <ul style={listStyle}>
@@ -35,16 +37,17 @@ const Blog = ({ blog, updateBlog, removeBlog }) => {
   );
   const extended = () => (
     <ul style={listStyle}>
-      <li>
+      <li className="titleAuthor">
         Title and Author: {blog.title} {blog.author}
       </li>
-      <li> URL:{blog.url}</li>
-      <li>
+      <li className="url"> URL:{blog.url}</li>
+      <li className="likes">
         Likes:{blog.likes}{" "}
         <button
+          className="updateBlog"
           onClick={async () => {
-            const updatedBlog = await blogService.updateBlog(blog);
-            updateBlog(updatedBlog);
+            updateBlog(blog);
+            await blogService.updateBlog(blog);
           }}
         >
           like
@@ -78,6 +81,7 @@ const Blog = ({ blog, updateBlog, removeBlog }) => {
       <div>
         {!toggle ? simple() : extended()}
         <button
+          className="extended"
           onClick={() => {
             setToggle(!toggle);
           }}

@@ -24,6 +24,7 @@ const App = () => {
 
   const saveBlog = (blogSaved) => {
     setBlogs((prevBlog) => [...prevBlog, blogSaved]);
+    console.log(blogSaved);
     newBlogRef.current.toggleVisibility();
   };
 
