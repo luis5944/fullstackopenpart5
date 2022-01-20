@@ -7,7 +7,7 @@ import blogService from "./services/blogs";
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
-  const [user, setUser] = useState(null);
+  const [userA, setUser] = useState(null);
   const [notification, setNotification] = useState("");
   const newBlogRef = useRef();
 
@@ -23,8 +23,17 @@ const App = () => {
   }, []);
 
   const saveBlog = (blogSaved) => {
-    setBlogs((prevBlog) => [...prevBlog, blogSaved]);
-    console.log(blogSaved);
+    const user = { username: userA.username, id: blogSaved.user };
+    const newBlog = {
+      author: blogSaved.author,
+      id: blogSaved.id,
+      likes: blogSaved.likes,
+      title: blogSaved.title,
+      url: blogSaved.url,
+      user,
+    };
+
+    setBlogs((prevBlog) => [...prevBlog, newBlog]);
     newBlogRef.current.toggleVisibility();
   };
 
@@ -54,7 +63,7 @@ const App = () => {
         ""
       )}
       <p>
-        {user.username} logged in{" "}
+        {userA.username} logged in{" "}
         <button
           onClick={() => {
             setUser(null);
@@ -67,24 +76,26 @@ const App = () => {
 
       <Togglable ref={newBlogRef}>
         <NewBlog
-          user={user}
+          user={userA}
           setNotification={setNotification}
           saveBlog={saveBlog}
         />
       </Togglable>
 
-      {blogs.map((blog) => (
-        <Blog
-          key={blog.id}
-          blog={blog}
-          updateBlog={updateBlog}
-          removeBlog={removeBlog}
-        />
-      ))}
+      {blogs
+        .map((blog) => (
+          <Blog
+            key={blog.id}
+            blog={blog}
+            updateBlog={updateBlog}
+            removeBlog={removeBlog}
+          />
+        ))
+        .sort((a, b) => b.props.blog.likes - a.props.blog.likes)}
     </div>
   );
 
-  return <>{user ? blogForm() : <Login setUser={setUser} />}</>;
+  return <>{userA ? blogForm() : <Login setUser={setUser} />}</>;
 };
 
 export default App;

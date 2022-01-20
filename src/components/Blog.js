@@ -5,7 +5,6 @@ import blogService from "../services/blogs";
 import PropTypes from "prop-types";
 
 const Blog = ({ blog, updateBlog, removeBlog }) => {
-  const userLs = JSON.parse(localStorage.getItem("loginData"));
   const blogStyle = {
     marginTop: 5,
     paddingTop: 10,
@@ -19,14 +18,15 @@ const Blog = ({ blog, updateBlog, removeBlog }) => {
   };
   const [toggle, setToggle] = useState(false);
   const [owner, setOwner] = useState(true);
+  const userLs = JSON.parse(localStorage.getItem("loginData"));
 
   useEffect(() => {
-    if (userLs) {
+    if (userLs && blog.user) {
       if (userLs.username !== blog.user.username) {
         setOwner(false);
       }
     }
-  }, [userLs, blog.user.username]);
+  }, [userLs, blog.user]);
 
   const simple = () => (
     <ul style={listStyle}>
@@ -53,10 +53,11 @@ const Blog = ({ blog, updateBlog, removeBlog }) => {
           like
         </button>
       </li>
-      <li> User:{blog.user.username}</li>
+      <li> User:{blog.user ? blog.user.username : ""}</li>
       <li>
         {owner ? (
           <button
+            id="remove-button"
             onClick={async () => {
               const confirm = window.confirm(
                 `Remove blog ${blog.title} by ${blog.author}`
@@ -78,7 +79,7 @@ const Blog = ({ blog, updateBlog, removeBlog }) => {
   );
   return (
     <div style={blogStyle}>
-      <div>
+      <div className="blog">
         {!toggle ? simple() : extended()}
         <button
           className="extended"

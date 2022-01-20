@@ -9,9 +9,10 @@ const NewBlog = ({ user, saveBlog, setNotification }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      saveBlog(newBlog);
       const blogSaved = await blogService.createBlog(newBlog, user.token);
+      saveBlog(blogSaved);
       notification(blogSaved);
+      setNewBlog(initialState);
     } catch (error) {
       console.log(error.message);
       notification();
@@ -72,7 +73,9 @@ const NewBlog = ({ user, saveBlog, setNotification }) => {
             }}
           />
         </div>
-        <button type="submit">Create</button>
+        <button type="submit" id="create-button">
+          Create
+        </button>
       </form>
     </>
   );
